@@ -12,9 +12,10 @@
 
     "accessories": [
         {
-            "accessory": "HttpTemphum",
-            "name": "Living Room Weather",
-            "url": "http://192.168.1.210/weather",
+            "accessory": "SimpleHttpSwitch",
+            "name": "Living Room Button",
+            "url": "http://192.168.1.210/button",
+            "default_state_off": true, 
             "sendimmediately": "",
             "http_method": "GET"
         }

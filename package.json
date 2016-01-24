@@ -1,7 +1,7 @@
 {
-  "name": "homebridge-httptemperaturehumidity",
-  "version": "0.0.10",
-  "description": "https plugin for homebridge",
+  "name": "homebridge-http-simple-switch",
+  "version": "0.0.1",
+  "description": "http plugin for homebridge",
   "license": "ISC",
   "keywords": [
     "homebridge-plugin"
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/lucacri/homebridge-http-temperature-humidity.git"
+    "url": "git://github.com/lucacri/homebridge-http-simple-switch.git"
   },
   "dependencies": {
     "sync-request": "^2.1.0"

@@ -1,30 +1,27 @@
 var Service, Characteristic;
 var request = require('sync-request');
 
-var temperatureService;
-var humidityService;
 var url 
-var humidity = 0;
-var temperature = 0;
 
 module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
-    homebridge.registerAccessory("homebridge-httptemperaturehumidity", "HttpTemphum", HttpTemphum);
+    homebridge.registerAccessory("homebridge-http-simple-switch", "SimpleHttpSwitch", SimpleHttpSwitch);
 }
 
 
-function HttpTemphum(log, config) {
+function SimpleHttpSwitch(log, config) {
     this.log = log;
 
     // url info
     this.url = config["url"];
     this.http_method = config["http_method"];
     this.sendimmediately = config["sendimmediately"];
+    this.default_state_off = config["default_state_off"];
     this.name = config["name"];
 }
 
-HttpTemphum.prototype = {
+SimpleHttpSwitch.prototype = {
 
     httpRequest: function (url, body, method, username, password, sendimmediately, callback) {
         request({
@@ -38,11 +35,11 @@ HttpTemphum.prototype = {
                 })
     },
 
-    getStateHumidity: function(callback){    
-		callback(null, this.humidity);
+    getPowerState: function (callback) {
+        callback(null, !this.default_state_off);
     },
 
-    getState: function (callback) {
+    setPowerState: function(powerOn, callback) {
         var body;
 
 		var res = request(this.http_method, this.url, {});
@@ -52,14 +49,9 @@ HttpTemphum.prototype = {
 		}else{
 			this.log('HTTP power function succeeded!');
             var info = JSON.parse(res.body);
-
-            temperatureService.setCharacteristic(Characteristic.CurrentTemperature, info.temperature);
-            humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, info.humidity);
-
             this.log(res.body);
             this.log(info);
-            this.temperature = info.temperature;
-			callback(null, this.temperature);
+			callback();
 		}
 
     },
@@ -77,16 +69,13 @@ HttpTemphum.prototype = {
                 .setCharacteristic(Characteristic.Model, "Luca Model")
                 .setCharacteristic(Characteristic.SerialNumber, "Luca Serial Number");
 
-        temperatureService = new Service.TemperatureSensor(this.name);
-        temperatureService
-                .getCharacteristic(Characteristic.CurrentTemperature)
-                .on('get', this.getState.bind(this));
+        switchService = new Service.Switch(this.name);
+        switchService
+                .getCharacteristic(Characteristic.On)
+                .on('get', this.getPowerState.bind(this))
+                .on('set', this.setPowerState.bind(this));
 
-        humidityService = new Service.HumiditySensor(this.name);
-        humidityService
-                .getCharacteristic(Characteristic.CurrentRelativeHumidity)
-                .on('get', this.getStateHumidity.bind(this));
-
-        return [temperatureService, humidityService];
+    
+        return [switchService];
     }
 };
