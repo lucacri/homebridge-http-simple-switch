@@ -1,6 +1,6 @@
 {
   "name": "homebridge-http-simple-switch",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "http plugin for homebridge",
   "license": "ISC",
   "keywords": [
