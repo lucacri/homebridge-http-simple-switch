@@ -18,6 +18,6 @@
     "url": "git://github.com/lucacri/homebridge-http-simple-switch.git"
   },
   "dependencies": {
-    "sync-request": "^2.1.0"
+    "sync-request": "2.2.0"
   }
 }
